@@ -1,6 +1,15 @@
 import { useMemo } from "react";
 import { backgroundConfig as cfg } from "./backgroundConfig";
 
+type RainItem = {
+    x: number;
+    y: number;
+    len: number;
+    rot: number;
+    delay: number;
+    speed: number;
+};
+
 function rand(min: number, max: number) {
     return Math.random() * (max - min) + min;
 }
@@ -8,9 +17,9 @@ function rand(min: number, max: number) {
 export default function BackgroundGraphics() {
     if (!cfg.enabled) return null;
 
-    const rain = useMemo(() => {
-        if (!cfg.rain.enabled) return [];
-        const items = [];
+    const rain = useMemo((): { angle: number; items: RainItem[] } => {
+        if (!cfg.rain.enabled) return { angle: 0, items: [] };
+        const items: RainItem[] = [];
         const angle = (cfg.rain.angleDeg * Math.PI) / 180;
         for (let i = 0; i < cfg.rain.count; i++) {
             items.push({
@@ -25,8 +34,8 @@ export default function BackgroundGraphics() {
         return { angle, items };
     }, []);
 
-    const clouds = useMemo(() => {
-        if (!cfg.clouds.enabled) return [];
+    const clouds = useMemo((): { stencil: { x: number; y: number }[] } => {
+        if (!cfg.clouds.enabled) return { stencil: [] };
         // Simple cloud stencil made of circular dots positions
         const stencil: { x: number; y: number }[] = [];
         const w = 20, h = 10;
@@ -55,13 +64,13 @@ export default function BackgroundGraphics() {
             {/* Rain layer */}
             {cfg.rain.enabled && (
                 <svg width="100%" height="100%" style={{ position: "absolute", inset: 0 }}>
-                    {rain.items.map((r, i) => (
+                    {rain.items.map((r: RainItem, i: number) => (
                         <line
                             key={i}
                             x1={`${r.x * 100}%`}
                             y1={`${r.y * 100}%`}
-                            x2={`${r.x * 100 + Math.cos(r.rot * Math.PI / 180) * r.len}px`}
-                            y2={`${r.y * 100 + Math.sin(r.rot * Math.PI / 180) * r.len}px`}
+                            x2={`${r.x * 100 + Math.cos((r.rot * Math.PI) / 180) * r.len}px`}
+                            y2={`${r.y * 100 + Math.sin((r.rot * Math.PI) / 180) * r.len}px`}
                             stroke="rgba(255,255,255,0.7)"
                             strokeWidth={cfg.rain.widthPx}
                         >

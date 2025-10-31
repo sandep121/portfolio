@@ -1,4 +1,4 @@
-import { Box, Button, Container, Grid, Stack, Typography } from "@mui/material";
+import { Box, Button, Container, Stack, Grid, Typography } from "@mui/material";
 import { hero } from "../constants/hero";
 import { skills } from "../constants/skills";
 import { projects } from "../constants/projects";
@@ -16,13 +16,13 @@ export default function Home() {
       <Typography variant="h6" color="text.secondary" gutterBottom>
         {hero.subtitle}
       </Typography>
-      <Grid container spacing={2} sx={{ my: 2 }}>
-        {hero.stats.map((s) => (
-          <Grid key={s.label} item xs={12} sm={6} md={4}>
-            <Stat value={s.value} label={s.label} />
-          </Grid>
-        ))}
-      </Grid>
+        <Grid container spacing={2} sx={{ my: 2 }}>
+            {hero.stats.map((s) => (
+                <Grid key={s.label} size={{ xs: 12, sm: 6, md: 4 }}>
+                    <Stat value={s.value} label={s.label} />
+                </Grid>
+            ))}
+        </Grid>
       <Stack direction="row" spacing={2} sx={{ my: 2 }}>
         <Button variant="contained" component={RouterLink} to="/projects">
           View Projects
